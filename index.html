@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services Chart: Simoleons and Neo-Simoleons (Service Update 2.0)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #dbeafe;
+      background-image: radial-gradient(#bfdbfe 1px, transparent 1px);
+      background-size: 16px 16px;
+      color: #0f172a;
+    }
+
+    /* Crisp tabular numerals so all costs and capacities align vertically */
+    .num {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Custom subtle scrollbars for responsive horizontal scrolling on small screens */
+    .table-wrap::-webkit-scrollbar {
+      height: 6px;
+    }
+    .table-wrap::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 999px;
+    }
+    .table-wrap::-webkit-scrollbar-thumb {
+      background: #94a3b8;
+      border-radius: 999px;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      #chart-sheet {
+        box-shadow: none !important;
+        border: 2px solid #0f172a !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+      .section-block {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen py-4 px-2 sm:px-4 md:px-6">
+
+  <!-- Interactive Control Bar -->
+  <div class="no-print max-w-[1440px] mx-auto mb-4 bg-white/95 backdrop-blur border border-sky-200 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+    <!-- Category Filter Pills -->
+    <div class="flex flex-wrap items-center gap-1.5" id="filter-bar">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">View:</span>
+      <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-xl text-xs font-bold bg-teal-700 text-white shadow-sm transition">All Sections</button>
+      <button data-filter="utilities" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Power, Water, Waste & Sewage</button>
+      <button data-filter="safety" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Fire, Police & Health</button>
+      <button data-filter="omega" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Control-Net, Drones, Regional & Omega</button>
+      <button data-filter="demands" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-purple-100 text-purple-800 hover:bg-purple-200 transition">Residential Demands (New!)</button>
+    </div>
+
+    <!-- Search Input -->
+    <div class="flex items-center">
+      <div class="relative flex-1 sm:flex-initial">
+        <input
+          id="search-input"
+          type="text"
+          placeholder="Highlight building or zone..."
+          class="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+        />
+        <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.3-4.3"></path>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       MAIN INFOGRAPHIC POSTER SHEET
+  =================================================================== -->
+  <main id="chart-sheet" class="max-w-[1440px] mx-auto bg-[#e0f2fe] border-[3px] border-sky-500 rounded-2xl p-2.5 sm:p-4 shadow-xl space-y-3.5">
+
+    <!-- Top Banner -->
+    <header class="bg-teal-800 border-2 border-slate-900 rounded-xl px-4 py-3 text-center shadow-sm flex flex-col md:flex-row items-center justify-between gap-2">
+      <div class="hidden md:flex items-center gap-2 text-xs font-semibold text-teal-100">
+        <span class="inline-flex items-center gap-1.5 bg-teal-900/80 px-2.5 py-1 rounded-lg border border-teal-600">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="#facc15" stroke="#854d0e" stroke-width="2"/>
+            <circle cx="12" cy="12" r="7.5" fill="none" stroke="#fef08a" stroke-width="1"/>
+            <text x="12" y="16.2" text-anchor="middle" font-size="12" font-weight="900" fill="#713f12">§</text>
+          </svg>
+          Simoleons
+        </span>
+        <span class="inline-flex items-center gap-1.5 bg-teal-900/80 px-2.5 py-1 rounded-lg border border-teal-600">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+            <polygon points="12.5,2 21,6.8 21,17.2 12.5,22 4,17.2 4,6.8" fill="#0f172a" stroke="#06b6d4" stroke-width="1.6"/>
+            <polygon points="11.5,2 19.5,6.8 19.5,17.2 11.5,22 3.5,17.2 3.5,6.8" fill="#1e293b" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="11.5" y="16" text-anchor="middle" font-size="11.5" font-weight="900" fill="#22d3ee">§</text>
+          </svg>
+          Neo-Simoleons
+        </span>
+      </div>
+
+      <h1 class="text-lg sm:text-2xl md:text-[26px] font-black tracking-wide uppercase text-white">
+        SERVICES CHART: <span class="text-amber-300">SIMOLEONS</span> AND <span class="text-cyan-300">NEO-SIMOLEONS</span>
+      </h1>
+
+      <div class="flex items-center gap-2 text-xs font-bold text-teal-100">
+        <span class="bg-teal-900/80 px-2.5 py-1 rounded-lg border border-teal-600">Service Update 2.0</span>
+      </div>
+    </header>
+
+    <!-- =========================================================
+         SECTION 1: POWER (Full Width, 8 Plants, Levels 1–10)
+    ========================================================= -->
+    <section data-category="utilities" class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-[#fde68a] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+        <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">POWER</h2>
+        <span class="inline-flex items-center" data-header-icon="power"></span>
+      </div>
+      <div class="table-wrap overflow-x-auto">
+        <table id="table-power" class="w-full border-collapse text-xs"></table>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION 2: WATER & SEWAGE (Reorganized Side-by-Side)
+    ========================================================= -->
+    <div data-category="utilities" class="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+      <!-- WATER (5 Plants) -->
+      <section class="section-block xl:col-span-7 bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#93c5fd] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">WATER</h2>
+          <span class="inline-flex items-center" data-header-icon="water"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-water" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+
+      <!-- SEWAGE (4 Plants) -->
+      <section class="section-block xl:col-span-5 bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#7dd3fc] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">SEWAGE</h2>
+          <span class="inline-flex items-center" data-header-icon="sewage"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-sewage" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+    </div>
+
+    <!-- =========================================================
+         SECTION 3: WASTE MANAGEMENT (Unified All 5 Facilities!)
+    ========================================================= -->
+    <section data-category="utilities" class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-[#cbd5e1] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+        <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">WASTE MANAGEMENT</h2>
+        <span class="inline-flex items-center" data-header-icon="waste"></span>
+        <span class="hidden sm:inline text-[11px] font-semibold text-slate-700">(All 5 Facilities Unified)</span>
+      </div>
+      <div class="table-wrap overflow-x-auto">
+        <table id="table-waste" class="w-full border-collapse text-xs"></table>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION 4: RESIDENTIAL DEMANDS (HOUSES' DEMANDS MAX + DEMAND PER TIER)
+         Positioned directly between Utilities and Emergency Services (Option 1)
+    ========================================================= -->
+    <section data-category="demands" class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm">
+      <div class="bg-[#d8b4fe] border-b-2 border-slate-900 px-3 py-1.5 flex flex-wrap items-center justify-center gap-2">
+        <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">RESIDENTIAL SERVICE DEMANDS</h2>
+        <span class="text-xs font-bold bg-purple-900 text-white px-2 py-0.5 rounded-full">Max Demand &amp; Demand per Tier</span>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 divide-y-2 lg:divide-y-0 lg:divide-x-2 divide-slate-900">
+        <!-- Table A: HOUSES' DEMANDS (Max) -->
+        <div class="lg:col-span-4 flex flex-col">
+          <div class="bg-purple-100 border-b border-slate-900 px-3 py-1.5 text-center">
+            <h3 class="text-xs sm:text-sm font-black uppercase tracking-wide text-purple-950">HOUSES' DEMANDS (Max)</h3>
+          </div>
+          <div class="table-wrap overflow-x-auto flex-1">
+            <table class="w-full border-collapse text-xs h-full">
+              <thead>
+                <tr class="bg-slate-100 border-b border-slate-900 text-[11px] font-extrabold uppercase text-slate-800">
+                  <th class="py-1.5 px-3 text-left border-r border-slate-400">HOMES</th>
+                  <th class="py-1.5 px-3 text-center w-24">DEMAND</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-houses-max" class="divide-y divide-slate-300 font-semibold"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Table B: DEMAND PER TIER -->
+        <div class="lg:col-span-8 flex flex-col">
+          <div class="bg-purple-100 border-b border-slate-900 px-3 py-1.5 text-center">
+            <h3 class="text-xs sm:text-sm font-black uppercase tracking-wide text-purple-950">DEMAND PER TIER</h3>
+          </div>
+          <div class="table-wrap overflow-x-auto flex-1">
+            <table class="w-full border-collapse text-xs h-full">
+              <thead>
+                <tr class="bg-slate-100 border-b border-slate-900 text-[11px] font-extrabold text-slate-800">
+                  <th class="py-2 px-2.5 text-left border-r border-slate-400 whitespace-nowrap">Demand per Tier</th>
+                  <th class="py-2 px-2 text-center border-r border-slate-300">Regular zones</th>
+                  <th class="py-2 px-2 text-center border-r border-slate-300">Paris, London, Tokyo</th>
+                  <th class="py-2 px-2 text-center border-r border-slate-300">Regional</th>
+                  <th class="py-2 px-2 text-center border-r border-slate-300">Florentine, Kyoto, Art Nouveau, Latin America</th>
+                  <th class="py-2 px-2 text-center border-r border-slate-300">Old Town</th>
+                  <th class="py-2 px-2 text-center">Omega</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-demand-tier" class="divide-y divide-slate-300 font-semibold"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         SECTION 5: FIRE, POLICE & HEALTH (3-Column Row)
+    ========================================================= -->
+    <div data-category="safety" class="grid grid-cols-1 lg:grid-cols-3 gap-3.5">
+      <!-- FIRE -->
+      <section class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#fca5a5] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">FIRE</h2>
+          <span class="inline-flex items-center" data-header-icon="fire"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-fire" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+
+      <!-- POLICE -->
+      <section class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#93c5fd] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">POLICE</h2>
+          <span class="inline-flex items-center" data-header-icon="police"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-police" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+
+      <!-- HEALTH -->
+      <section class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#86efac] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">HEALTH</h2>
+          <span class="inline-flex items-center" data-header-icon="health"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-health" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+    </div>
+
+    <!-- =========================================================
+         SECTION 6: CONTROL-NET & DRONES (Side-by-Side)
+    ========================================================= -->
+    <div data-category="omega" class="grid grid-cols-1 xl:grid-cols-2 gap-3.5">
+      <!-- CONTROL-NET -->
+      <section class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#7dd3fc] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">CONTROL-NET</h2>
+          <span class="inline-flex items-center" data-header-icon="controlnet"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-controlnet" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+
+      <!-- DRONES -->
+      <section class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#67e8f9] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">DRONES</h2>
+          <span class="inline-flex items-center" data-header-icon="drones"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-drones" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+    </div>
+
+    <!-- =========================================================
+         SECTION 7: REGIONAL SERVICES & OMEGA BUILDINGS
+    ========================================================= -->
+    <div data-category="omega" class="grid grid-cols-1 xl:grid-cols-12 gap-3.5">
+      <!-- REGIONAL SERVICES -->
+      <section class="section-block xl:col-span-6 bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#fdba74] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">REGIONAL SERVICES</h2>
+          <span class="inline-flex items-center" data-header-icon="regional"></span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-regional" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+
+      <!-- OMEGA BUILDINGS -->
+      <section class="section-block xl:col-span-6 bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm flex flex-col">
+        <div class="bg-[#a5b4fc] border-b-2 border-slate-900 px-3 py-1.5 flex items-center justify-center gap-2">
+          <h2 class="text-sm sm:text-base font-black tracking-wider uppercase text-slate-900">OMEGA BUILDINGS</h2>
+          <span class="text-base" aria-hidden="true">🧬</span>
+        </div>
+        <div class="table-wrap overflow-x-auto flex-1">
+          <table id="table-omega-buildings" class="w-full border-collapse text-xs h-full"></table>
+        </div>
+      </section>
+    </div>
+
+    <!-- =========================================================
+         SECTION 8: IMPORTANT NOTES, LEGEND & AUTHOR CREDIT
+    ========================================================= -->
+    <footer class="section-block grid grid-cols-1 lg:grid-cols-12 border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm bg-white">
+      <!-- Important Notes -->
+      <div class="lg:col-span-8 flex flex-col">
+        <div class="bg-slate-300 border-b-2 border-slate-900 px-3 py-1 text-center">
+          <h2 class="text-xs sm:text-sm font-black tracking-wider uppercase text-slate-900">*IMPORTANT NOTES*</h2>
+        </div>
+        <div class="p-3 sm:p-4 text-center space-y-1.5 text-xs sm:text-[13px] flex-1 flex flex-col justify-center">
+          <p class="font-bold text-slate-900">Prices of regional services are the same in all regions.</p>
+          <p class="font-bold text-slate-800">QTY = Quantity or Amount &nbsp;&bull;&nbsp; N/A = Not available but expected.</p>
+          <p class="font-extrabold text-red-700 pt-1">
+            This chart was created after Service Update 2.0, so the costs of these utilities are adjusted accordingly. If you don't have the update yet, you won't see these leveled utilities.
+          </p>
+        </div>
+      </div>
+
+      <!-- Author Credit Banner -->
+      <div class="lg:col-span-4 bg-teal-800 border-t-2 lg:border-t-0 lg:border-l-2 border-slate-900 p-4 flex flex-col items-center justify-center text-center text-white">
+        <p class="text-base sm:text-xl font-extrabold tracking-tight leading-snug">
+          This Chart is made by <span class="text-amber-300">UWorld</span><br />
+          aka <span class="text-cyan-300">PlasmaBo</span>
+        </p>
+        <p class="text-[11px] text-teal-200 mt-1.5 font-medium">Reorganized Edition with Residential Tier Demand Matrix</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. EXACT DATA DEFINITIONS (Service Update 2.0 + Residential Demands)
+    // =========================================================================
+    const CURRENCY = {
+      SIM: 'SIM',
+      NEO: 'NEO',
+      REG: 'REG',
+      CASH: 'CASH'
+    };
+
+    const POWER_DATA = {
+      capIcon: 'power',
+      showRightLevel: true,
+      legendColSpan: { startCol: 1, endCol: 2, startRow: 6, endRow: 9 },
+      buildings: [
+        {
+          name: 'WIND PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[1500, 6], [1750, 12], [2000, 20], null, null, null, null, null, null, null]
+        },
+        {
+          name: 'COAL PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[1000, 10], [1250, 25], [1500, 35], null, null, null, null, null, null, null]
+        },
+        {
+          name: 'D. WIND PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[2000, 15], [2250, 30], [2500, 55], [2750, 75], [3000, 90], null, null, null, null, null]
+        },
+        {
+          name: 'SOLAR PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[3000, 20], [3500, 55], [4000, 70], [4500, 90], [5000, 180], null, null, null, null, null]
+        },
+        {
+          name: 'OIL PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[2500, 35], [3000, 90], [3500, 135], [4000, 180], [4500, 270], null, null, null, null, null]
+        },
+        {
+          name: 'NUCLEAR PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[5000, 90], [6500, 225], [8000, 315], [9500, 405], [11000, 495], [12500, 585], [14000, 675], [16000, 810], null, null]
+        },
+        {
+          name: 'FUSION PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[20000, 450], [25000, 765], [30000, 1080], [35000, 1350], [40000, 1575], [45000, 1710], [50000, 1845], [55000, 1980], [60000, 2070], [65000, 2250]]
+        },
+        {
+          name: 'OMEGA PLANT',
+          currency: CURRENCY.NEO,
+          levels: [[10000, 675], [15000, 1350], [20000, 2025], [25000, 2700], [30000, 3150], [35000, 3600], [37500, 4050], [40000, 4500], [42500, 4950], [45000, 5600]]
+        }
+      ]
+    };
+
+    const WATER_DATA = {
+      capIcon: 'water',
+      showRightLevel: false,
+      buildings: [
+        {
+          name: 'BASIC TOWER',
+          currency: CURRENCY.SIM,
+          levels: [[4000, 10], [4500, 30], [5000, 70], null, null, null, null, null, null, null]
+        },
+        {
+          name: 'PUMPING STATION',
+          currency: CURRENCY.SIM,
+          levels: [[7500, 45], [10000, 135], [12500, 225], [15000, 315], [20000, 450], null, null, null, null, null]
+        },
+        {
+          name: 'SALTWATER PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[10000, 90], [13000, 160], [16000, 250], [19000, 360], [21000, 470], [23000, 585], [25000, 700], [27000, 810], null, null]
+        },
+        {
+          name: 'FRESHWATER PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[16000, 180], [19500, 360], [23000, 500], [26500, 630], [30000, 720], [33500, 810], [37000, 900], [40500, 990], [44000, 1080], [45000, 1350]]
+        },
+        {
+          name: 'OMEGA PLANT',
+          currency: CURRENCY.NEO,
+          levels: [[10000, 675], [15000, 1350], [20000, 2025], [25000, 2700], [30000, 3150], [35000, 3600], [37500, 4050], [40000, 4500], [42500, 4950], [45000, 5600]]
+        }
+      ]
+    };
+
+    const SEWAGE_DATA = {
+      capIcon: 'sewage',
+      showRightLevel: false,
+      buildings: [
+        {
+          name: 'S. SEWAGE PIPE',
+          currency: CURRENCY.SIM,
+          levels: [[3000, 55], [3500, 90], [4500, 135], [5000, 160], [6000, 180], null, null, null, null, null]
+        },
+        {
+          name: 'BASIC SEWAGE PIPE',
+          currency: CURRENCY.SIM,
+          levels: [[4000, 90], [5000, 160], [6500, 250], [8000, 360], [9500, 470], [11000, 585], [12500, 700], [14000, 810], null, null]
+        },
+        {
+          name: 'DELUXE SEWAGE PLANT',
+          currency: CURRENCY.SIM,
+          levels: [[16000, 180], [19500, 360], [23000, 490], [26500, 630], [30000, 720], [33500, 800], [37000, 900], [40500, 1000], [44000, 1100], [45000, 1350]]
+        },
+        {
+          name: 'OMEGA SEWAGE PLANT',
+          currency: CURRENCY.NEO,
+          levels: [[10000, 675], [15000, 1350], [20000, 2025], [25000, 2700], [30000, 3150], [35000, 3600], [37500, 4050], [40000, 4500], [42500, 4950], [45000, 5600]]
+        }
+      ]
+    };
+
+    const WASTE_DATA = {
+      capIcon: 'waste',
+      showRightLevel: true,
+      buildings: [
+        {
+          name: 'S. GARBAGE DUMP',
+          currency: CURRENCY.SIM,
+          levels: [[3000, 55], [3500, 90], [4500, 135], [5000, 160], [6000, 180], null, null, null, null, null]
+        },
+        {
+          name: 'GARBAGE DUMP',
+          currency: CURRENCY.SIM,
+          levels: [[8000, 135], [11000, 315], [14000, 430], [17000, 540], [20000, 675], null, null, null, null, null]
+        },
+        {
+          name: 'GARBAGE INCINERATOR',
+          currency: CURRENCY.SIM,
+          levels: [[16000, 110], [20000, 340], [24000, 430], [28000, 520], [32000, 610], [36000, 700], [40000, 790], [44000, 900], null, null]
+        },
+        {
+          name: 'RECYCLING CENTER',
+          currency: CURRENCY.SIM,
+          levels: [[35000, 450], [40000, 765], [45000, 1080], [50000, 1350], [55000, 1575], [60000, 1710], [65000, 1845], [70000, 1980], [75000, 2070], [80000, 2250]]
+        },
+        {
+          name: 'OMEGA RECYCLING',
+          currency: CURRENCY.NEO,
+          levels: [[10000, 675], [15000, 1350], [20000, 2025], [25000, 2700], [30000, 3150], [35000, 3600], [37500, 4050], [40000, 4500], [42500, 4950], [45000, 5600]]
+        }
+      ]
+    };
+
+    const FIRE_DATA = {
+      capIcon: 'fire',
+      maxRows: 8,
+      buildings: [
+        {
+          name: 'SMALL FIRE STATION',
+          currency: CURRENCY.SIM,
+          rows: [[1700, 50], [2250, 125], [2750, 200]]
+        },
+        {
+          name: 'BASIC FIRE STATION',
+          currency: CURRENCY.SIM,
+          rows: [[2250, 100], [2500, 175], [2750, 250], [3000, 350], [3250, 500]]
+        },
+        {
+          name: 'DELUXE FIRE STATION',
+          currency: CURRENCY.SIM,
+          rows: [[5000, 200], [5250, 500], [5500, 750], [5750, 1000], [6000, 1250], [6250, 1500], [6500, 1750], [7000, 2000]]
+        }
+      ]
+    };
+
+    const POLICE_DATA = {
+      capIcon: 'police',
+      maxRows: 8,
+      buildings: [
+        {
+          name: 'SMALL POLICE STATION',
+          currency: CURRENCY.SIM,
+          rows: [[3000, 100], [3500, 150], [4500, 200]]
+        },
+        {
+          name: 'BASIC POLICE STATION',
+          currency: CURRENCY.SIM,
+          rows: [[4000, 200], [4250, 300], [4500, 400], [4750, 500], [5000, 600]]
+        },
+        {
+          name: 'POLICE PRECINCT',
+          currency: CURRENCY.SIM,
+          rows: [[8000, 250], [8500, 750], [9000, 1000], [9500, 1250], [10000, 1500], [10500, 1750], [11000, 2000], [12500, 2500]]
+        }
+      ]
+    };
+
+    const HEALTH_DATA = {
+      capIcon: 'health',
+      maxRows: 8,
+      buildings: [
+        {
+          name: 'SMALL HEALTH CLINIC',
+          currency: CURRENCY.SIM,
+          rows: [[4000, 100], [4600, 150], [5400, 200]]
+        },
+        {
+          name: 'HEALTH CLINIC',
+          currency: CURRENCY.SIM,
+          rows: [[5000, 200], [5200, 300], [5400, 400], [5600, 500], [6000, 600]]
+        },
+        {
+          name: 'HOSPITAL',
+          currency: CURRENCY.SIM,
+          rows: [[8000, 250], [8300, 750], [8600, 1000], [8900, 1250], [9200, 1500], [9500, 1750], [9800, 2000], [10000, 2500]]
+        }
+      ]
+    };
+
+    const CONTROLNET_DATA = {
+      capIcon: 'controlnet',
+      showRightLevel: false,
+      buildings: [
+        {
+          name: 'SMALL CONTROL-NET',
+          currency: CURRENCY.NEO,
+          levels: [['FREE', 50], [1800, 75], [2100, 100], [2400, 125], [2700, 150], [3000, 175], [3300, 200], [3600, 225], [3900, 250], [4500, 300]]
+        },
+        {
+          name: 'BASIC CONTROL-NET',
+          currency: CURRENCY.NEO,
+          levels: [[5000, 150], [5500, 200], [6000, 250], [6500, 300], [7000, 350], [7500, 400], [8000, 450], [8500, 500], [9000, 550], [10000, 600]]
+        },
+        {
+          name: 'DELUXE CONTROL-NET',
+          currency: CURRENCY.NEO,
+          levels: [[15000, 250], [16000, 500], [17000, 750], [18000, 1000], [19000, 1250], [20000, 1500], [21000, 1750], [22000, 2000], [23000, 2250], [25000, 2500]]
+        },
+        {
+          name: 'CONTROL-NET HQ',
+          currency: CURRENCY.NEO,
+          levels: [[20000, 750], [25000, 1000], [30000, 1250], [35000, 1500], [40000, 1750], [45000, 2000], [50000, 2250], [55000, 2500], [60000, 2750], [65000, 3000]]
+        }
+      ]
+    };
+
+    const DRONES_DATA = {
+      capIcon: 'drones',
+      showRightLevel: false,
+      buildings: [
+        {
+          name: 'SMALL DRONE BASE',
+          currency: CURRENCY.NEO,
+          levels: [[2000, 20], [2500, 45], [3000, 70], [3500, 90], [4000, 110], [4500, 135], [5000, 160], [5500, 180], [5750, 200], [6000, 225]]
+        },
+        {
+          name: 'BASIC DRONE BASE',
+          currency: CURRENCY.NEO,
+          levels: [[4000, 45], [5250, 90], [6500, 135], [7750, 180], [9000, 225], [10250, 270], [11500, 315], [12750, 360], [14000, 405], [15250, 450]]
+        },
+        {
+          name: 'DELUXE DRONE BASE',
+          currency: CURRENCY.NEO,
+          levels: [[8000, 90], [9500, 180], [11000, 270], [12500, 360], [14000, 450], [15500, 540], [17000, 630], [18500, 720], [20000, 810], [21500, 900]]
+        },
+        {
+          name: 'DRONE HQ',
+          currency: CURRENCY.NEO,
+          levels: Array(10).fill(['N/A', 'N/A'])
+        }
+      ]
+    };
+
+    const REGIONAL_DATA = {
+      capIcon: 'regional',
+      showRightLevel: false,
+      buildings: [
+        {
+          name: 'SMALL',
+          currency: CURRENCY.REG,
+          levels: [[100, 50], [125, 125], [200, 175], [225, 225], [250, 300], null, null, null, null, null]
+        },
+        {
+          name: 'MEDIUM',
+          currency: CURRENCY.REG,
+          levels: [[150, 100], [175, 200], [200, 275], [225, 350], [250, 425], [275, 500], [300, 550], [350, 600], null, null]
+        },
+        {
+          name: 'LARGE',
+          currency: CURRENCY.REG,
+          levels: [[300, 250], [350, 600], [400, 900], [450, 1200], [500, 1500], [550, 1800], [600, 2100], [650, 2400], [700, 2700], [800, 3000]]
+        }
+      ]
+    };
+
+    const OMEGA_BUILDINGS_ROWS = [
+      { qty: '1st', houses: 0, lab: 'FREE', center: 'FREE', booster: 750 },
+      { qty: '2nd', houses: 4, lab: 2500, center: 2500, booster: 1000 },
+      { qty: '3rd', houses: 8, lab: 5000, center: null, booster: null },
+      { qty: '4th', houses: 16, lab: 10000, center: null, booster: null },
+      { qty: '5th', houses: 32, lab: 20000, center: null, booster: null },
+      { qty: '6th', houses: 64, lab: 40000, center: null, booster: null },
+      { qty: '7th', houses: 72, lab: 40000, center: null, booster: null },
+      { qty: '8th', houses: 78, lab: 40000, center: null, booster: null },
+      { qty: '9th', houses: 84, lab: 40000, center: null, booster: null },
+      { qty: '10th', houses: 92, lab: 40000, center: null, booster: null }
+    ];
+
+    const HOUSES_MAX_DATA = [
+      ['KYOTO HOUSE', 30],
+      ['FLORENTINE ZONE', 30],
+      ['ART NOUVEAU ZONE', 30],
+      ['LATIN AMERICA ZONE', 30],
+      ['RESIDENTIAL ZONE', 35],
+      ['PARISIAN ZONE', 40],
+      ['LONDON TOWN ZONE', 40],
+      ['TOKYO ZONE', 40],
+      ['REGIONAL ZONES', 45],
+      ['EPIC BUILDINGS', 45],
+      ['OMEGA ZONES', 50]
+    ];
+
+    const DEMAND_PER_TIER_DATA = [
+      { tier: 'Tier 1', regular: '1', plt: '1', regional: '1', fkal: '1', oldTown: '1', omega: '1' },
+      { tier: 'Tier 2', regular: '2', plt: '2', regional: '2', fkal: '2', oldTown: '2', omega: '2' },
+      { tier: 'Tier 3', regular: '5', plt: '5', regional: '5', fkal: '5', oldTown: '', omega: '5' },
+      { tier: 'Tier 4', regular: '10', plt: '10', regional: '10', fkal: '30', oldTown: '', omega: '10' },
+      { tier: 'Tier 5', regular: '15', plt: '15', regional: '15', fkal: '', oldTown: '', omega: '15' },
+      { tier: 'Tier 6', regular: '35', plt: '40', regional: '45', fkal: '', oldTown: '', omega: '50' },
+      { tier: 'Epic', regular: '45', plt: '', regional: '', fkal: '', oldTown: '', omega: '' }
+    ];
+
+    // =========================================================================
+    // 2. EXACT 3D ISOMETRIC GAME SYMBOLS (From Uploaded Sprite Sheet)
+    // =========================================================================
+
+    function currencyBadge(type) {
+      if (type === CURRENCY.SIM) {
+        // Gold circular Simoleons coin with § symbol
+        return `<svg title="Simoleons" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" fill="#facc15" stroke="#854d0e" stroke-width="2"/>
+          <circle cx="12" cy="12" r="7.5" fill="none" stroke="#fef08a" stroke-width="1"/>
+          <text x="12" y="16.2" text-anchor="middle" font-size="12" font-weight="900" fill="#713f12">§</text>
+        </svg>`;
+      }
+      if (type === CURRENCY.NEO) {
+        // Dark charcoal hexagonal coin/token with cyan rim and cyan § symbol
+        return `<svg title="Neo-Simoleons" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+          <polygon points="13,2 21.5,6.8 21.5,17.2 13,22 4.5,17.2 4.5,6.8" fill="#090d16" stroke="#0891b2" stroke-width="1.5" stroke-linejoin="round"/>
+          <polygon points="11.5,2 19.5,6.8 19.5,17.2 11.5,22 3.5,17.2 3.5,6.8" fill="#1e293b" stroke="#22d3ee" stroke-width="1.6" stroke-linejoin="round"/>
+          <text x="11.5" y="16" text-anchor="middle" font-size="11.5" font-weight="900" fill="#22d3ee">§</text>
+        </svg>`;
+      }
+      if (type === CURRENCY.CASH) {
+        // Isometric green stack of SimCash bills
+        return `<svg title="SimCash" class="w-4 h-3.5 shrink-0" viewBox="0 0 28 22">
+          <polygon points="3,11 16,5 25,10 12,16" fill="#4d7c0f" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
+          <polygon points="3,11 12,16 12,19 3,14" fill="#3f6212" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
+          <polygon points="12,16 25,10 25,13 12,19" fill="#365314" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
+          <polygon points="3,8 16,2 25,7 12,13" fill="#a3e635" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
+          <polygon points="3,8 12,13 12,16 3,11" fill="#65a30d" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
+          <polygon points="12,13 25,7 25,10 12,16" fill="#4d7c0f" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
+          <ellipse cx="14" cy="7.5" rx="4.2" ry="2.4" fill="#bef264" stroke="#365314" stroke-width="1"/>
+        </svg>`;
+      }
+      // Regional Simoleons (Silver/gold Regional coin with § emblem)
+      return `<svg title="Regional Simoleons" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="10" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+        <circle cx="12" cy="12" r="7.2" fill="#fde047" stroke="#a16207" stroke-width="1.2"/>
+        <text x="12" y="15.8" text-anchor="middle" font-size="11" font-weight="900" fill="#1e293b">§</text>
+      </svg>`;
+    }
+
+    function serviceIconSVG(type, sizeClass = 'w-4 h-4') {
+      const icons = {
+        // 1. Power: 3D isometric sky-blue lightning bolt
+        power: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <polygon points="8,2 18,2 14,10 19,10 10,22 11,13 6,13" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="6.5,2.5 16,2.5 12,10.5 17,10.5 8.5,21.5 9.5,13 4.8,13" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+        </svg>`,
+
+        // 2. Water: 3D isometric sky-blue water faucet/tap with water droplet
+        water: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <rect x="6" y="3" width="9" height="2.4" rx="1.2" fill="#38bdf8" stroke="#0369a1" stroke-width="1.2"/>
+          <rect x="9.5" y="5" width="2.5" height="3.5" fill="#0284c7" stroke="#0369a1" stroke-width="1.1"/>
+          <path d="M5 10.5c0-1.5 1.2-2.5 2.8-2.5h7.5c1.5 0 2.7 1.1 2.7 2.6v1.8h-3.2v-1.2H8.5v4.3H5v-5z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <ellipse cx="6.8" cy="15.8" rx="2.3" ry="1.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.1"/>
+          <path d="M6.8 17.5c0 0-2 2.2-2 3.4a2 2 0 0 0 4 0c0-1.2-2-3.4-2-3.4z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.2"/>
+        </svg>`,
+
+        // 3. Sewage: 3D isometric sky-blue angled drainage pipe pouring water out
+        sewage: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M10 4.5l7.5 3.5c2 1 2.8 3.6 1.8 5.8s-3.4 3.2-5.4 2.2L6.5 12.5" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.4" stroke-linejoin="round"/>
+          <ellipse cx="8.2" cy="8.5" rx="3.8" ry="4.8" transform="rotate(-22 8.2 8.5)" fill="#38bdf8" stroke="#0369a1" stroke-width="1.4"/>
+          <ellipse cx="8.2" cy="8.5" rx="2.1" ry="2.8" transform="rotate(-22 8.2 8.5)" fill="#0c4a6e"/>
+          <path d="M8.5 9.2c-2.8 1.5-4.8 4.4-4.8 8.2 0 1.3.9 2.2 1.8 2.2s1.6-.9 1.8-2.2c.3-2.2 1.5-4.2 3.2-5.4" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>`,
+
+        // 4. Waste Management: 3D isometric sky-blue ribbed trash bin with lid
+        waste: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M6 7.5h12l-1.3 12c-.2 1.4-1.4 2.5-2.8 2.5h-3.8c-1.4 0-2.6-1.1-2.8-2.5L6 7.5z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.4" stroke-linejoin="round"/>
+          <ellipse cx="12" cy="6.5" rx="7" ry="2.2" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.4"/>
+          <path d="M9.5 4.8c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8" fill="none" stroke="#0369a1" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M9 10.5v8M12 10.5v8.5M15 10.5v8" stroke="#0284c7" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>`,
+
+        // 5. Fire: 3D isometric sky-blue coiled fire hose with nozzle spraying water droplets
+        fire: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M14.5 18.5H7.5c-2.2 0-3.5-1.2-3.5-2.8s1.3-2.7 3.5-2.7h6.5c2 0 3.2-1 3.2-2.4s-1.2-2.3-3.2-2.3H6.5" fill="none" stroke="#0369a1" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14.5 18.5H7.5c-2.2 0-3.5-1.2-3.5-2.8s1.3-2.7 3.5-2.7h6.5c2 0 3.2-1 3.2-2.4s-1.2-2.3-3.2-2.3H6.5" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <polygon points="12.5,5.8 18.5,4.2 19.3,7.3 13.3,8.5" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <circle cx="21.2" cy="4.2" r="1.1" fill="#38bdf8" stroke="#0369a1" stroke-width="0.9"/>
+          <circle cx="21.5" cy="6.8" r="1.1" fill="#38bdf8" stroke="#0369a1" stroke-width="0.9"/>
+        </svg>`,
+
+        // 6. Police: 3D isometric sky-blue briefcase/suitcase
+        police: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M9.5 6.5V4.8c0-.8.7-1.3 1.5-1.3h3c.8 0 1.5.5 1.5 1.3v1.7" fill="none" stroke="#0369a1" stroke-width="1.6" stroke-linecap="round"/>
+          <polygon points="3.5,8.5 14.5,5.5 20.5,8.2 9.5,11.2" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="3.5,8.5 9.5,11.2 9.5,19.8 3.5,17" fill="#0284c7" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <polygon points="9.5,11.2 20.5,8.2 20.5,16.8 9.5,19.8" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <path d="M12.5 10.4v8.5M17.5 9v8.5" stroke="#0369a1" stroke-width="1.2"/>
+        </svg>`,
+
+        // 7. Health: 3D isometric sky-blue 6-pointed Star of Life with ECG heartbeat pulse line
+        health: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M10.2 2.5h4.2v5.4l4.7-2.7 2.1 3.6-4.7 2.7 4.7 2.7-2.1 3.6-4.7-2.7v5.4h-4.2v-5.4l-4.7 2.7-2.1-3.6 4.7-2.7-4.7-2.7 2.1-3.6 4.7 2.7V2.5z" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.2" stroke-linejoin="round"/>
+          <path d="M9.5 2.5h4.2v5.4l4.7-2.7 2.1 3.6-4.7 2.7 4.7 2.7-2.1 3.6-4.7-2.7v5.4H9.5v-5.4l-4.7 2.7-2.1-3.6 4.7-2.7-4.7-2.7 2.1-3.6 4.7 2.7V2.5z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.2" stroke-linejoin="round"/>
+          <polyline points="6.5,11.8 9,11.8 10.3,8.8 12,14.8 13.4,10.5 14.5,11.8 17,11.8" fill="none" stroke="#0c4a6e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+
+        // 8. Control-Net: 3D isometric sky-blue radio/signal tower with concentric signal waves
+        controlnet: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <polygon points="12,11 6.5,21.5 10,21.5 12,17.5 14,21.5 17.5,21.5" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <circle cx="12" cy="9.2" r="2.3" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
+          <path d="M8.5 6.2a5 5 0 0 0 0 6M15.5 6.2a5 5 0 0 1 0 6" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 3.8a8.5 8.5 0 0 0 0 10.8M18 3.8a8.5 8.5 0 0 1 0 10.8" fill="none" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>`,
+
+        // 9. Drones: 3D isometric sky-blue 4-rotor quadcopter drone
+        drones: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M6.5 7l11 10M17.5 7l-11 10" stroke="#0369a1" stroke-width="2.2" stroke-linecap="round"/>
+          <polygon points="12,9.2 15.2,12 12,14.8 8.8,12" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
+          <ellipse cx="6.2" cy="6.8" rx="3.4" ry="2.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
+          <ellipse cx="17.8" cy="6.8" rx="3.4" ry="2.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
+          <ellipse cx="6.2" cy="17.2" rx="3.4" ry="2.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
+          <ellipse cx="17.8" cy="17.2" rx="3.4" ry="2.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
+        </svg>`,
+
+        // 10. Regional Services: Isometric shield/emblem
+        regional: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
+          <path d="M12 2l8 3.5v6c0 5.2-3.4 9.5-8 10.5-4.6-1-8-5.3-8-10.5v-6L12 2z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M9 12l2 2 4-4" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>`
+      };
+      return icons[type] || '';
+    }
+
+    function renderCostCapPair(entry, currency, capIcon) {
+      if (!entry) {
+        return `
+          <td class="bg-slate-200/75 border-r border-slate-300 py-1 px-1.5"></td>
+          <td class="bg-slate-200/75 border-r border-slate-400 py-1 px-1.5"></td>
+        `;
+      }
+      const [cost, cap] = entry;
+      const isFreeOrNA = typeof cost === 'string';
+      const showCurrencyIcon = cost !== 'FREE';
+      const showCapIcon = cap !== 'N/A';
+
+      return `
+        <td class="num py-1 px-1.5 border-r border-slate-200 whitespace-nowrap">
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-bold ${isFreeOrNA ? 'text-slate-700' : 'text-slate-900'}">${cost}</span>
+            ${showCurrencyIcon ? currencyBadge(currency) : ''}
+          </div>
+        </td>
+        <td class="num py-1 px-1.5 border-r border-slate-400 whitespace-nowrap bg-slate-50/60">
+          <div class="flex items-center justify-between gap-1">
+            <span class="font-extrabold text-slate-800">${cap}</span>
+            ${showCapIcon ? serviceIconSVG(capIcon, 'w-3.5 h-3.5') : ''}
+          </div>
+        </td>
+      `;
+    }
+
+    // Renders any 10-level service table
+    function renderLeveledTable(tableId, config) {
+      const table = document.getElementById(tableId);
+      const { buildings, capIcon, showRightLevel, legendColSpan } = config;
+
+      let thead = `
+        <thead>
+          <tr class="bg-slate-100 border-b-2 border-slate-900 text-[11px] font-extrabold uppercase text-slate-900">
+            <th class="py-1.5 px-2 text-center border-r-2 border-slate-900 leading-tight w-16 bg-slate-200/80">
+              SERVICES<br/><span class="text-[10px] font-bold text-slate-700">LEVEL</span>
+            </th>
+      `;
+
+      buildings.forEach((b) => {
+        thead += `
+          <th colspan="2" data-searchable="${b.name.toLowerCase()}" class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">
+            ${b.name}
+          </th>
+        `;
+      });
+
+      if (showRightLevel) {
+        thead += `
+          <th class="py-1.5 px-2 text-center border-l-2 border-slate-900 leading-tight w-16 bg-slate-200/80">
+            SERVICES<br/><span class="text-[10px] font-bold text-slate-700">LEVEL</span>
+          </th>
+        `;
+      }
+      thead += `</tr></thead>`;
+
+      let tbody = `<tbody class="divide-y divide-slate-300">`;
+
+      for (let lvl = 0; lvl < 10; lvl++) {
+        tbody += `<tr class="hover:bg-yellow-100/60 transition-colors">`;
+        tbody += `<td class="num py-1 px-2 text-center font-black border-r-2 border-slate-900 bg-slate-100">${lvl + 1}</td>`;
+
+        buildings.forEach((b, bIdx) => {
+          // Special legend box inside Power table (rows 6-9, columns 1-2: Wind Plant & Coal Plant)
+          if (legendColSpan && bIdx === legendColSpan.startCol - 1 && lvl + 1 === legendColSpan.startRow) {
+            tbody += `
+              <td colspan="4" rowspan="4" class="bg-white border-2 border-slate-900 p-2 text-center align-middle">
+                <div class="flex flex-col items-center justify-center gap-1.5">
+                  <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-amber-100 border border-amber-500 text-[11px] font-bold">
+                      ${currencyBadge(CURRENCY.SIM)} Cost
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-sky-100 border border-sky-400 text-[11px] font-bold">
+                      ${serviceIconSVG('power', 'w-4 h-4')} Capacity
+                    </span>
+                  </div>
+                  <p class="text-[11px] font-extrabold text-slate-800 leading-tight">
+                    Denotes Capacity at that level
+                  </p>
+                </div>
+              </td>
+            `;
+            return;
+          }
+          // Skip cells covered by the Power legend rowspan/colspan
+          if (
+            legendColSpan &&
+            lvl + 1 >= legendColSpan.startRow &&
+            lvl + 1 <= legendColSpan.endRow &&
+            (bIdx === legendColSpan.startCol - 1 || bIdx === legendColSpan.endCol - 1)
+          ) {
+            return;
+          }
+
+          tbody += renderCostCapPair(b.levels[lvl], b.currency, capIcon);
+        });
+
+        if (showRightLevel) {
+          tbody += `<td class="num py-1 px-2 text-center font-black border-l-2 border-slate-900 bg-slate-100">${lvl + 1}</td>`;
+        }
+        tbody += `</tr>`;
+      }
+
+      tbody += `</tbody>`;
+      table.innerHTML = thead + tbody;
+    }
+
+    // Renders Fire, Police, Health tables (no level column, sequential rows)
+    function renderStepServiceTable(tableId, config) {
+      const table = document.getElementById(tableId);
+      const { buildings, capIcon, maxRows } = config;
+
+      let thead = `
+        <thead>
+          <tr class="bg-slate-100 border-b-2 border-slate-900 text-[11px] font-extrabold uppercase text-slate-900">
+      `;
+      buildings.forEach((b) => {
+        thead += `
+          <th colspan="2" data-searchable="${b.name.toLowerCase()}" class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">
+            ${b.name}
+          </th>
+        `;
+      });
+      thead += `</tr></thead>`;
+
+      let tbody = `<tbody class="divide-y divide-slate-300">`;
+      for (let r = 0; r < maxRows; r++) {
+        tbody += `<tr class="hover:bg-yellow-100/60 transition-colors">`;
+        buildings.forEach((b) => {
+          tbody += renderCostCapPair(b.rows[r] || null, b.currency, capIcon);
+        });
+        tbody += `</tr>`;
+      }
+      tbody += `</tbody>`;
+      table.innerHTML = thead + tbody;
+    }
+
+    // Renders Omega Buildings table
+    function renderOmegaBuildingsTable() {
+      const table = document.getElementById('table-omega-buildings');
+      const thead = `
+        <thead>
+          <tr class="bg-slate-100 border-b-2 border-slate-900 text-[11px] font-extrabold uppercase text-slate-900">
+            <th class="py-1.5 px-2 text-center border-r border-slate-400">QTY</th>
+            <th class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">OMEGA HOUSES<br/>NEEDED</th>
+            <th class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">OMEGA<br/>LAB</th>
+            <th class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">RESEARCH<br/>CENTER</th>
+            <th class="py-1.5 px-2 text-center leading-tight">RESEARCH<br/>BOOSTER</th>
+          </tr>
+        </thead>
+      `;
+
+      let tbody = `<tbody class="divide-y divide-slate-300">`;
+      OMEGA_BUILDINGS_ROWS.forEach((row) => {
+        const formatOmegaCell = (val, badgeType) => {
+          if (val === null) return `<td class="bg-slate-200/75 border-r border-slate-300 py-1 px-2"></td>`;
+          if (val === 'FREE') {
+            return `<td class="py-1 px-2 text-center font-extrabold text-emerald-700 border-r border-slate-300">FREE</td>`;
+          }
+          return `
+            <td class="num py-1 px-2 border-r border-slate-300 whitespace-nowrap">
+              <div class="flex items-center justify-between gap-1.5">
+                <span class="font-bold text-slate-900">${val}</span>
+                ${currencyBadge(badgeType)}
+              </div>
+            </td>
+          `;
+        };
+
+        tbody += `
+          <tr class="hover:bg-indigo-50/70 transition-colors">
+            <td class="num py-1 px-2 text-center font-black border-r border-slate-400 bg-slate-100">${row.qty}</td>
+            <td class="num py-1 px-2 text-center font-extrabold text-slate-900 border-r border-slate-400">${row.houses}</td>
+            ${formatOmegaCell(row.lab, CURRENCY.NEO)}
+            ${formatOmegaCell(row.center, CURRENCY.CASH)}
+            ${row.booster === null
+              ? `<td class="bg-slate-200/75 py-1 px-2"></td>`
+              : `<td class="num py-1 px-2 whitespace-nowrap">
+                  <div class="flex items-center justify-between gap-1.5">
+                    <span class="font-bold text-slate-900">${row.booster}</span>
+                    ${currencyBadge(CURRENCY.CASH)}
+                  </div>
+                </td>`
+            }
+          </tr>
+        `;
+      });
+      tbody += `</tbody>`;
+      table.innerHTML = thead + tbody;
+    }
+
+    // Renders Residential Demands (Table A + Table B)
+    function renderResidentialDemands() {
+      const tbodyMax = document.getElementById('tbody-houses-max');
+      tbodyMax.innerHTML = HOUSES_MAX_DATA.map(([zone, demand]) => `
+        <tr data-searchable="${zone.toLowerCase()}" class="hover:bg-purple-50 transition-colors">
+          <td class="py-1.5 px-3 text-left font-extrabold text-slate-900 border-r border-slate-400">${zone}</td>
+          <td class="num py-1.5 px-3 text-center font-black text-purple-900 bg-purple-50/50">${demand}</td>
+        </tr>
+      `).join('');
+
+      const tbodyTier = document.getElementById('tbody-demand-tier');
+      const renderTierCell = (val, isLast = false) => {
+        const borderClass = isLast ? '' : 'border-r border-slate-300';
+        if (!val) {
+          return `<td class="py-2 px-2 text-center bg-slate-100/80 text-slate-400 ${borderClass}">—</td>`;
+        }
+        return `
+          <td class="num py-2 px-2 text-center font-extrabold text-slate-900 ${borderClass}">
+            ${val}
+          </td>
+        `;
+      };
+
+      tbodyTier.innerHTML = DEMAND_PER_TIER_DATA.map((row) => `
+        <tr data-searchable="${row.tier.toLowerCase()}" class="hover:bg-purple-50 transition-colors">
+          <td class="py-2 px-2.5 text-left font-black text-slate-900 border-r border-slate-400 bg-slate-50 whitespace-nowrap">${row.tier}</td>
+          ${renderTierCell(row.regular)}
+          ${renderTierCell(row.plt)}
+          ${renderTierCell(row.regional)}
+          ${renderTierCell(row.fkal)}
+          ${renderTierCell(row.oldTown)}
+          ${renderTierCell(row.omega, true)}
+        </tr>
+      `).join('');
+    }
+
+    // =========================================================================
+    // 3. INITIALIZE ALL TABLES & INTERACTIVITY
+    // =========================================================================
+    document.querySelectorAll('[data-header-icon]').forEach((el) => {
+      el.innerHTML = serviceIconSVG(el.getAttribute('data-header-icon'), 'w-4 h-4');
+    });
+
+    renderLeveledTable('table-power', POWER_DATA);
+    renderLeveledTable('table-water', WATER_DATA);
+    renderLeveledTable('table-sewage', SEWAGE_DATA);
+    renderLeveledTable('table-waste', WASTE_DATA);
+    renderStepServiceTable('table-fire', FIRE_DATA);
+    renderStepServiceTable('table-police', POLICE_DATA);
+    renderStepServiceTable('table-health', HEALTH_DATA);
+    renderLeveledTable('table-controlnet', CONTROLNET_DATA);
+    renderLeveledTable('table-drones', DRONES_DATA);
+    renderLeveledTable('table-regional', REGIONAL_DATA);
+    renderOmegaBuildingsTable();
+    renderResidentialDemands();
+
+    // Category Filter Logic
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const categorizedBlocks = document.querySelectorAll('[data-category]');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-filter');
+
+        filterButtons.forEach((b) => {
+          b.classList.remove('active', 'bg-teal-700', 'text-white', 'shadow-sm');
+          if (b.getAttribute('data-filter') === 'demands') {
+            b.classList.add('bg-purple-100', 'text-purple-800');
+          } else {
+            b.classList.add('bg-slate-100', 'text-slate-700');
+          }
+        });
+
+        btn.classList.remove('bg-slate-100', 'text-slate-700', 'bg-purple-100', 'text-purple-800');
+        btn.classList.add('active', 'bg-teal-700', 'text-white', 'shadow-sm');
+
+        categorizedBlocks.forEach((block) => {
+          if (target === 'all' || block.getAttribute('data-category') === target) {
+            block.classList.remove('hidden');
+          } else {
+            block.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // Live Search Highlighting
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      const searchableEls = document.querySelectorAll('[data-searchable]');
+
+      searchableEls.forEach((el) => {
+        const text = el.getAttribute('data-searchable');
+        if (q && text.includes(q)) {
+          el.classList.add('bg-amber-300', 'text-slate-950', 'ring-2', 'ring-amber-600');
+        } else {
+          el.classList.remove('bg-amber-300', 'text-slate-950', 'ring-2', 'ring-amber-600');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
