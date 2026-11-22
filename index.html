@@ -64,31 +64,48 @@
 <body class="min-h-screen py-4 px-2 sm:px-4 md:px-6">
 
   <!-- Interactive Control Bar -->
-  <div class="no-print max-w-[1440px] mx-auto mb-4 bg-white/95 backdrop-blur border border-sky-200 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-    <!-- Category Filter Pills -->
-    <div class="flex flex-wrap items-center gap-1.5" id="filter-bar">
-      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">View:</span>
-      <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-xl text-xs font-bold bg-teal-700 text-white shadow-sm transition">All Sections</button>
-      <button data-filter="utilities" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Power, Water, Waste & Sewage</button>
-      <button data-filter="safety" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Fire, Police & Health</button>
-      <button data-filter="omega" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Control-Net, Drones, Regional & Omega</button>
-      <button data-filter="demands" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-purple-100 text-purple-800 hover:bg-purple-200 transition">Residential Demands (New!)</button>
+  <div class="no-print max-w-[1440px] mx-auto mb-4 bg-white/95 backdrop-blur border border-sky-200 rounded-2xl p-3 sm:p-4 shadow-sm space-y-2.5">
+    <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <!-- Category Filter Pills -->
+      <div class="flex flex-wrap items-center gap-1.5" id="filter-bar">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">View:</span>
+        <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-xl text-xs font-bold bg-teal-700 text-white shadow-sm transition">All Sections</button>
+        <button data-filter="utilities" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Power, Water, Waste & Sewage</button>
+        <button data-filter="safety" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Fire, Police & Health</button>
+        <button data-filter="omega" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">Control-Net, Drones, Regional & Omega</button>
+        <button data-filter="demands" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-purple-100 text-purple-800 hover:bg-purple-200 transition">Residential Demands (New!)</button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="flex items-center">
+        <div class="relative flex-1 sm:flex-initial">
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Highlight building or zone..."
+            class="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+          />
+          <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </svg>
+        </div>
+      </div>
     </div>
 
-    <!-- Search Input -->
-    <div class="flex items-center">
-      <div class="relative flex-1 sm:flex-initial">
-        <input
-          id="search-input"
-          type="text"
-          placeholder="Highlight building or zone..."
-          class="w-full sm:w-64 pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
-        />
-        <svg class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="m21 21-4.3-4.3"></path>
-        </svg>
-      </div>
+    <!-- Chart Mode Toggles -->
+    <div class="pt-2 border-t border-slate-200/80 flex flex-wrap items-center gap-2">
+      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">Options:</span>
+
+      <label id="toggle-gain-label" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200/70 cursor-pointer select-none transition">
+        <input id="toggle-gain" type="checkbox" class="w-3.5 h-3.5 rounded accent-teal-700 cursor-pointer" />
+        <span>Capacity Gain per Level (+Δ)</span>
+      </label>
+
+      <label id="toggle-sort-label" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-200/70 cursor-pointer select-none transition">
+        <input id="toggle-sort" type="checkbox" class="w-3.5 h-3.5 rounded accent-teal-700 cursor-pointer" />
+        <span>Sort by Cost / Capacity (Best → Worst)</span>
+      </label>
     </div>
   </div>
 
@@ -183,7 +200,6 @@
 
     <!-- =========================================================
          SECTION 4: RESIDENTIAL DEMANDS (HOUSES' DEMANDS MAX + DEMAND PER TIER)
-         Positioned directly between Utilities and Emergency Services (Option 1)
     ========================================================= -->
     <section data-category="demands" class="section-block bg-white border-2 border-slate-900 rounded-xl overflow-hidden shadow-sm">
       <div class="bg-[#d8b4fe] border-b-2 border-slate-900 px-3 py-1.5 flex flex-wrap items-center justify-center gap-2">
@@ -687,12 +703,53 @@
     ];
 
     // =========================================================================
-    // 2. EXACT 3D ISOMETRIC GAME SYMBOLS (From Uploaded Sprite Sheet)
+    // 2. PRECOMPUTED DELTAS & COST-PER-CAPACITY EFFICIENCY
     // =========================================================================
+    const chartState = {
+      showGain: false,
+      sortByCostPerCap: false,
+      searchQuery: ''
+    };
 
+    function enrichBuilding(b, entriesKey) {
+      const entries = b[entriesKey];
+      let prevCap = 0;
+      let totalCost = 0;
+      let maxCap = 0;
+
+      const gainEntries = entries.map((entry) => {
+        if (!entry) return null;
+        const [cost, cap] = entry;
+        if (typeof cost === 'number') totalCost += cost;
+        if (typeof cap === 'number') {
+          const gain = cap - prevCap;
+          prevCap = cap;
+          maxCap = cap;
+          return [cost, gain];
+        }
+        return [cost, cap];
+      });
+
+      const costPerCap = maxCap > 0 ? totalCost / maxCap : Infinity;
+      return { ...b, gainEntries, costPerCap };
+    }
+
+    function getOrderedBuildings(config, entriesKey) {
+      const enriched = config.buildings.map((b) => enrichBuilding(b, entriesKey));
+      if (!chartState.sortByCostPerCap) return enriched;
+      return [...enriched].sort((a, b) => a.costPerCap - b.costPerCap);
+    }
+
+    function formatCostPerCap(val) {
+      if (!Number.isFinite(val)) return 'N/A';
+      return val >= 10 ? val.toFixed(1) : val.toFixed(2);
+    }
+
+    // =========================================================================
+    // 3. EXACT 3D ISOMETRIC GAME SYMBOLS
+    // =========================================================================
     function currencyBadge(type) {
       if (type === CURRENCY.SIM) {
-        // Gold circular Simoleons coin with § symbol
         return `<svg title="Simoleons" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" fill="#facc15" stroke="#854d0e" stroke-width="2"/>
           <circle cx="12" cy="12" r="7.5" fill="none" stroke="#fef08a" stroke-width="1"/>
@@ -700,7 +757,6 @@
         </svg>`;
       }
       if (type === CURRENCY.NEO) {
-        // Dark charcoal hexagonal coin/token with cyan rim and cyan § symbol
         return `<svg title="Neo-Simoleons" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
           <polygon points="13,2 21.5,6.8 21.5,17.2 13,22 4.5,17.2 4.5,6.8" fill="#090d16" stroke="#0891b2" stroke-width="1.5" stroke-linejoin="round"/>
           <polygon points="11.5,2 19.5,6.8 19.5,17.2 11.5,22 3.5,17.2 3.5,6.8" fill="#1e293b" stroke="#22d3ee" stroke-width="1.6" stroke-linejoin="round"/>
@@ -708,7 +764,6 @@
         </svg>`;
       }
       if (type === CURRENCY.CASH) {
-        // Isometric green stack of SimCash bills
         return `<svg title="SimCash" class="w-4 h-3.5 shrink-0" viewBox="0 0 28 22">
           <polygon points="3,11 16,5 25,10 12,16" fill="#4d7c0f" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
           <polygon points="3,11 12,16 12,19 3,14" fill="#3f6212" stroke="#1a2e05" stroke-width="1.2" stroke-linejoin="round"/>
@@ -719,7 +774,6 @@
           <ellipse cx="14" cy="7.5" rx="4.2" ry="2.4" fill="#bef264" stroke="#365314" stroke-width="1"/>
         </svg>`;
       }
-      // Regional Simoleons (Silver/gold Regional coin with § emblem)
       return `<svg title="Regional Simoleons" class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="10" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
         <circle cx="12" cy="12" r="7.2" fill="#fde047" stroke="#a16207" stroke-width="1.2"/>
@@ -729,13 +783,10 @@
 
     function serviceIconSVG(type, sizeClass = 'w-4 h-4') {
       const icons = {
-        // 1. Power: 3D isometric sky-blue lightning bolt
         power: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <polygon points="8,2 18,2 14,10 19,10 10,22 11,13 6,13" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.3" stroke-linejoin="round"/>
           <polygon points="6.5,2.5 16,2.5 12,10.5 17,10.5 8.5,21.5 9.5,13 4.8,13" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
         </svg>`,
-
-        // 2. Water: 3D isometric sky-blue water faucet/tap with water droplet
         water: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <rect x="6" y="3" width="9" height="2.4" rx="1.2" fill="#38bdf8" stroke="#0369a1" stroke-width="1.2"/>
           <rect x="9.5" y="5" width="2.5" height="3.5" fill="#0284c7" stroke="#0369a1" stroke-width="1.1"/>
@@ -743,24 +794,18 @@
           <ellipse cx="6.8" cy="15.8" rx="2.3" ry="1.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.1"/>
           <path d="M6.8 17.5c0 0-2 2.2-2 3.4a2 2 0 0 0 4 0c0-1.2-2-3.4-2-3.4z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.2"/>
         </svg>`,
-
-        // 3. Sewage: 3D isometric sky-blue angled drainage pipe pouring water out
         sewage: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M10 4.5l7.5 3.5c2 1 2.8 3.6 1.8 5.8s-3.4 3.2-5.4 2.2L6.5 12.5" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.4" stroke-linejoin="round"/>
           <ellipse cx="8.2" cy="8.5" rx="3.8" ry="4.8" transform="rotate(-22 8.2 8.5)" fill="#38bdf8" stroke="#0369a1" stroke-width="1.4"/>
           <ellipse cx="8.2" cy="8.5" rx="2.1" ry="2.8" transform="rotate(-22 8.2 8.5)" fill="#0c4a6e"/>
           <path d="M8.5 9.2c-2.8 1.5-4.8 4.4-4.8 8.2 0 1.3.9 2.2 1.8 2.2s1.6-.9 1.8-2.2c.3-2.2 1.5-4.2 3.2-5.4" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linecap="round"/>
         </svg>`,
-
-        // 4. Waste Management: 3D isometric sky-blue ribbed trash bin with lid
         waste: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M6 7.5h12l-1.3 12c-.2 1.4-1.4 2.5-2.8 2.5h-3.8c-1.4 0-2.6-1.1-2.8-2.5L6 7.5z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.4" stroke-linejoin="round"/>
           <ellipse cx="12" cy="6.5" rx="7" ry="2.2" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.4"/>
           <path d="M9.5 4.8c0-1.1 1.1-1.8 2.5-1.8s2.5.7 2.5 1.8" fill="none" stroke="#0369a1" stroke-width="1.5" stroke-linecap="round"/>
           <path d="M9 10.5v8M12 10.5v8.5M15 10.5v8" stroke="#0284c7" stroke-width="1.4" stroke-linecap="round"/>
         </svg>`,
-
-        // 5. Fire: 3D isometric sky-blue coiled fire hose with nozzle spraying water droplets
         fire: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M14.5 18.5H7.5c-2.2 0-3.5-1.2-3.5-2.8s1.3-2.7 3.5-2.7h6.5c2 0 3.2-1 3.2-2.4s-1.2-2.3-3.2-2.3H6.5" fill="none" stroke="#0369a1" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M14.5 18.5H7.5c-2.2 0-3.5-1.2-3.5-2.8s1.3-2.7 3.5-2.7h6.5c2 0 3.2-1 3.2-2.4s-1.2-2.3-3.2-2.3H6.5" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -768,8 +813,6 @@
           <circle cx="21.2" cy="4.2" r="1.1" fill="#38bdf8" stroke="#0369a1" stroke-width="0.9"/>
           <circle cx="21.5" cy="6.8" r="1.1" fill="#38bdf8" stroke="#0369a1" stroke-width="0.9"/>
         </svg>`,
-
-        // 6. Police: 3D isometric sky-blue briefcase/suitcase
         police: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M9.5 6.5V4.8c0-.8.7-1.3 1.5-1.3h3c.8 0 1.5.5 1.5 1.3v1.7" fill="none" stroke="#0369a1" stroke-width="1.6" stroke-linecap="round"/>
           <polygon points="3.5,8.5 14.5,5.5 20.5,8.2 9.5,11.2" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
@@ -777,23 +820,17 @@
           <polygon points="9.5,11.2 20.5,8.2 20.5,16.8 9.5,19.8" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
           <path d="M12.5 10.4v8.5M17.5 9v8.5" stroke="#0369a1" stroke-width="1.2"/>
         </svg>`,
-
-        // 7. Health: 3D isometric sky-blue 6-pointed Star of Life with ECG heartbeat pulse line
         health: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M10.2 2.5h4.2v5.4l4.7-2.7 2.1 3.6-4.7 2.7 4.7 2.7-2.1 3.6-4.7-2.7v5.4h-4.2v-5.4l-4.7 2.7-2.1-3.6 4.7-2.7-4.7-2.7 2.1-3.6 4.7 2.7V2.5z" fill="#0284c7" stroke="#0c4a6e" stroke-width="1.2" stroke-linejoin="round"/>
           <path d="M9.5 2.5h4.2v5.4l4.7-2.7 2.1 3.6-4.7 2.7 4.7 2.7-2.1 3.6-4.7-2.7v5.4H9.5v-5.4l-4.7 2.7-2.1-3.6 4.7-2.7-4.7-2.7 2.1-3.6 4.7 2.7V2.5z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.2" stroke-linejoin="round"/>
           <polyline points="6.5,11.8 9,11.8 10.3,8.8 12,14.8 13.4,10.5 14.5,11.8 17,11.8" fill="none" stroke="#0c4a6e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
-
-        // 8. Control-Net: 3D isometric sky-blue radio/signal tower with concentric signal waves
         controlnet: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <polygon points="12,11 6.5,21.5 10,21.5 12,17.5 14,21.5 17.5,21.5" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
           <circle cx="12" cy="9.2" r="2.3" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
           <path d="M8.5 6.2a5 5 0 0 0 0 6M15.5 6.2a5 5 0 0 1 0 6" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
           <path d="M6 3.8a8.5 8.5 0 0 0 0 10.8M18 3.8a8.5 8.5 0 0 1 0 10.8" fill="none" stroke="#0284c7" stroke-width="1.8" stroke-linecap="round"/>
         </svg>`,
-
-        // 9. Drones: 3D isometric sky-blue 4-rotor quadcopter drone
         drones: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M6.5 7l11 10M17.5 7l-11 10" stroke="#0369a1" stroke-width="2.2" stroke-linecap="round"/>
           <polygon points="12,9.2 15.2,12 12,14.8 8.8,12" fill="#38bdf8" stroke="#0369a1" stroke-width="1.3" stroke-linejoin="round"/>
@@ -802,8 +839,6 @@
           <ellipse cx="6.2" cy="17.2" rx="3.4" ry="2.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
           <ellipse cx="17.8" cy="17.2" rx="3.4" ry="2.1" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.3"/>
         </svg>`,
-
-        // 10. Regional Services: Isometric shield/emblem
         regional: `<svg class="${sizeClass} shrink-0" viewBox="0 0 24 24">
           <path d="M12 2l8 3.5v6c0 5.2-3.4 9.5-8 10.5-4.6-1-8-5.3-8-10.5v-6L12 2z" fill="#38bdf8" stroke="#0369a1" stroke-width="1.5" stroke-linejoin="round"/>
           <path d="M9 12l2 2 4-4" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -823,6 +858,8 @@
       const isFreeOrNA = typeof cost === 'string';
       const showCurrencyIcon = cost !== 'FREE';
       const showCapIcon = cap !== 'N/A';
+      const capDisplay = chartState.showGain && typeof cap === 'number' ? `+${cap}` : cap;
+      const capColor = chartState.showGain && typeof cap === 'number' ? 'text-teal-800' : 'text-slate-800';
 
       return `
         <td class="num py-1 px-1.5 border-r border-slate-200 whitespace-nowrap">
@@ -833,7 +870,7 @@
         </td>
         <td class="num py-1 px-1.5 border-r border-slate-400 whitespace-nowrap bg-slate-50/60">
           <div class="flex items-center justify-between gap-1">
-            <span class="font-extrabold text-slate-800">${cap}</span>
+            <span class="font-extrabold ${capColor}">${capDisplay}</span>
             ${showCapIcon ? serviceIconSVG(capIcon, 'w-3.5 h-3.5') : ''}
           </div>
         </td>
@@ -843,7 +880,9 @@
     // Renders any 10-level service table
     function renderLeveledTable(tableId, config) {
       const table = document.getElementById(tableId);
-      const { buildings, capIcon, showRightLevel, legendColSpan } = config;
+      const { capIcon, showRightLevel, legendColSpan } = config;
+      const buildings = getOrderedBuildings(config, 'levels');
+      const useLegend = legendColSpan && !chartState.sortByCostPerCap;
 
       let thead = `
         <thead>
@@ -854,9 +893,13 @@
       `;
 
       buildings.forEach((b) => {
+        const effBadge = chartState.sortByCostPerCap
+          ? `<div class="text-[10px] font-bold text-teal-800 normal-case mt-0.5">${formatCostPerCap(b.costPerCap)} §/cap</div>`
+          : '';
         thead += `
           <th colspan="2" data-searchable="${b.name.toLowerCase()}" class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">
-            ${b.name}
+            <div>${b.name}</div>
+            ${effBadge}
           </th>
         `;
       });
@@ -877,8 +920,10 @@
         tbody += `<td class="num py-1 px-2 text-center font-black border-r-2 border-slate-900 bg-slate-100">${lvl + 1}</td>`;
 
         buildings.forEach((b, bIdx) => {
-          // Special legend box inside Power table (rows 6-9, columns 1-2: Wind Plant & Coal Plant)
-          if (legendColSpan && bIdx === legendColSpan.startCol - 1 && lvl + 1 === legendColSpan.startRow) {
+          if (useLegend && bIdx === legendColSpan.startCol - 1 && lvl + 1 === legendColSpan.startRow) {
+            const legendLabel = chartState.showGain
+              ? 'Denotes Capacity Gained (+Δ) at that level'
+              : 'Denotes Capacity at that level';
             tbody += `
               <td colspan="4" rowspan="4" class="bg-white border-2 border-slate-900 p-2 text-center align-middle">
                 <div class="flex flex-col items-center justify-center gap-1.5">
@@ -887,20 +932,19 @@
                       ${currencyBadge(CURRENCY.SIM)} Cost
                     </span>
                     <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-sky-100 border border-sky-400 text-[11px] font-bold">
-                      ${serviceIconSVG('power', 'w-4 h-4')} Capacity
+                      ${serviceIconSVG('power', 'w-4 h-4')} ${chartState.showGain ? 'Capacity Gain' : 'Capacity'}
                     </span>
                   </div>
                   <p class="text-[11px] font-extrabold text-slate-800 leading-tight">
-                    Denotes Capacity at that level
+                    ${legendLabel}
                   </p>
                 </div>
               </td>
             `;
             return;
           }
-          // Skip cells covered by the Power legend rowspan/colspan
           if (
-            legendColSpan &&
+            useLegend &&
             lvl + 1 >= legendColSpan.startRow &&
             lvl + 1 <= legendColSpan.endRow &&
             (bIdx === legendColSpan.startCol - 1 || bIdx === legendColSpan.endCol - 1)
@@ -908,7 +952,8 @@
             return;
           }
 
-          tbody += renderCostCapPair(b.levels[lvl], b.currency, capIcon);
+          const entries = chartState.showGain ? b.gainEntries : b.levels;
+          tbody += renderCostCapPair(entries[lvl], b.currency, capIcon);
         });
 
         if (showRightLevel) {
@@ -924,16 +969,21 @@
     // Renders Fire, Police, Health tables (no level column, sequential rows)
     function renderStepServiceTable(tableId, config) {
       const table = document.getElementById(tableId);
-      const { buildings, capIcon, maxRows } = config;
+      const { capIcon, maxRows } = config;
+      const buildings = getOrderedBuildings(config, 'rows');
 
       let thead = `
         <thead>
           <tr class="bg-slate-100 border-b-2 border-slate-900 text-[11px] font-extrabold uppercase text-slate-900">
       `;
       buildings.forEach((b) => {
+        const effBadge = chartState.sortByCostPerCap
+          ? `<div class="text-[10px] font-bold text-teal-800 normal-case mt-0.5">${formatCostPerCap(b.costPerCap)} §/cap</div>`
+          : '';
         thead += `
           <th colspan="2" data-searchable="${b.name.toLowerCase()}" class="py-1.5 px-2 text-center border-r border-slate-400 leading-tight">
-            ${b.name}
+            <div>${b.name}</div>
+            ${effBadge}
           </th>
         `;
       });
@@ -943,7 +993,8 @@
       for (let r = 0; r < maxRows; r++) {
         tbody += `<tr class="hover:bg-yellow-100/60 transition-colors">`;
         buildings.forEach((b) => {
-          tbody += renderCostCapPair(b.rows[r] || null, b.currency, capIcon);
+          const entries = chartState.showGain ? b.gainEntries : b.rows;
+          tbody += renderCostCapPair(entries[r] || null, b.currency, capIcon);
         });
         tbody += `</tr>`;
       }
@@ -1041,25 +1092,70 @@
       `).join('');
     }
 
+    function applySearchHighlight() {
+      const q = chartState.searchQuery;
+      document.querySelectorAll('[data-searchable]').forEach((el) => {
+        const text = el.getAttribute('data-searchable');
+        if (q && text.includes(q)) {
+          el.classList.add('bg-amber-300', 'text-slate-950', 'ring-2', 'ring-amber-600');
+        } else {
+          el.classList.remove('bg-amber-300', 'text-slate-950', 'ring-2', 'ring-amber-600');
+        }
+      });
+    }
+
+    function renderServiceTables() {
+      renderLeveledTable('table-power', POWER_DATA);
+      renderLeveledTable('table-water', WATER_DATA);
+      renderLeveledTable('table-sewage', SEWAGE_DATA);
+      renderLeveledTable('table-waste', WASTE_DATA);
+      renderStepServiceTable('table-fire', FIRE_DATA);
+      renderStepServiceTable('table-police', POLICE_DATA);
+      renderStepServiceTable('table-health', HEALTH_DATA);
+      renderLeveledTable('table-controlnet', CONTROLNET_DATA);
+      renderLeveledTable('table-drones', DRONES_DATA);
+      renderLeveledTable('table-regional', REGIONAL_DATA);
+      applySearchHighlight();
+    }
+
     // =========================================================================
-    // 3. INITIALIZE ALL TABLES & INTERACTIVITY
+    // 4. INITIALIZE ALL TABLES & INTERACTIVITY
     // =========================================================================
     document.querySelectorAll('[data-header-icon]').forEach((el) => {
       el.innerHTML = serviceIconSVG(el.getAttribute('data-header-icon'), 'w-4 h-4');
     });
 
-    renderLeveledTable('table-power', POWER_DATA);
-    renderLeveledTable('table-water', WATER_DATA);
-    renderLeveledTable('table-sewage', SEWAGE_DATA);
-    renderLeveledTable('table-waste', WASTE_DATA);
-    renderStepServiceTable('table-fire', FIRE_DATA);
-    renderStepServiceTable('table-police', POLICE_DATA);
-    renderStepServiceTable('table-health', HEALTH_DATA);
-    renderLeveledTable('table-controlnet', CONTROLNET_DATA);
-    renderLeveledTable('table-drones', DRONES_DATA);
-    renderLeveledTable('table-regional', REGIONAL_DATA);
+    renderServiceTables();
     renderOmegaBuildingsTable();
     renderResidentialDemands();
+
+    // Toggle 1: Capacity Gain per Level (+Δ)
+    const toggleGain = document.getElementById('toggle-gain');
+    const toggleGainLabel = document.getElementById('toggle-gain-label');
+    toggleGain.addEventListener('change', () => {
+      chartState.showGain = toggleGain.checked;
+      toggleGainLabel.classList.toggle('bg-teal-700', chartState.showGain);
+      toggleGainLabel.classList.toggle('text-white', chartState.showGain);
+      toggleGainLabel.classList.toggle('border-teal-800', chartState.showGain);
+      toggleGainLabel.classList.toggle('bg-slate-100', !chartState.showGain);
+      toggleGainLabel.classList.toggle('text-slate-800', !chartState.showGain);
+      toggleGainLabel.classList.toggle('border-slate-300', !chartState.showGain);
+      renderServiceTables();
+    });
+
+    // Toggle 2: Sort by Cost / Capacity (Best -> Worst)
+    const toggleSort = document.getElementById('toggle-sort');
+    const toggleSortLabel = document.getElementById('toggle-sort-label');
+    toggleSort.addEventListener('change', () => {
+      chartState.sortByCostPerCap = toggleSort.checked;
+      toggleSortLabel.classList.toggle('bg-teal-700', chartState.sortByCostPerCap);
+      toggleSortLabel.classList.toggle('text-white', chartState.sortByCostPerCap);
+      toggleSortLabel.classList.toggle('border-teal-800', chartState.sortByCostPerCap);
+      toggleSortLabel.classList.toggle('bg-slate-100', !chartState.sortByCostPerCap);
+      toggleSortLabel.classList.toggle('text-slate-800', !chartState.sortByCostPerCap);
+      toggleSortLabel.classList.toggle('border-slate-300', !chartState.sortByCostPerCap);
+      renderServiceTables();
+    });
 
     // Category Filter Logic
     const filterButtons = document.querySelectorAll('.filter-btn');
@@ -1094,17 +1190,8 @@
     // Live Search Highlighting
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.trim().toLowerCase();
-      const searchableEls = document.querySelectorAll('[data-searchable]');
-
-      searchableEls.forEach((el) => {
-        const text = el.getAttribute('data-searchable');
-        if (q && text.includes(q)) {
-          el.classList.add('bg-amber-300', 'text-slate-950', 'ring-2', 'ring-amber-600');
-        } else {
-          el.classList.remove('bg-amber-300', 'text-slate-950', 'ring-2', 'ring-amber-600');
-        }
-      });
+      chartState.searchQuery = e.target.value.trim().toLowerCase();
+      applySearchHighlight();
     });
   </script>
 </body>
